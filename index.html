@@ -107,7 +107,7 @@
         function getQueryParameter(param) {
             const urlParams = new URLSearchParams(window.location.search);
             const value = urlParams.get(param);
-
+        
             // Remove any extra quotes if they exist
             if (value && value.startsWith('"') && value.endsWith('"')) {
                 return value.slice(1, -1);
@@ -116,12 +116,30 @@
         }
 
         // Set dynamic title and content
-        const dynamicTitle = getQueryParameter('title') || 'Default Title';
-        const dynamicContent = getQueryParameter('content') || 'No content provided.';
+        const title = getQueryParameter('title') || 'Default Title';
+        const contents = getQueryParameter('contents');
+        let itemsArray = [];
+        let content = 'No content provided';
+
+        if (contents) {
+            itemsArray = contents.split(",,");
+            content = itemsArray[0]; // Default to the first content
+        
+            if (title.includes('-')) {
+                const ttype = title.split(' - ')[1];
+                for (const item of itemsArray) {
+                    const itemArray = item.split(' - ');
+                    if (itemArray[1] === ttype) {
+                        content = itemArray[0];
+                        break;
+                    }
+                }
+            }
+        }
 
         // Update the DOM with dynamic values
-        document.getElementById('dynamicTitle').textContent = dynamicTitle;
-        document.getElementById('dynamicContent').textContent = dynamicContent;
+        document.getElementById('dynamicTitle').textContent = title;
+        document.getElementById('dynamicContent').textContent = content;
 
         // Flip card animation
         function flipCard() {
