@@ -3,23 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flipping Card with Sans-Serif Fonts</title>
+    <title>Flipping Card - Adjusted Layout</title>
     <style>
         body {
-            font-family: Arial, sans-serif; /* Simple sans-serif font */
+            font-family: Arial, sans-serif;
             margin: 0;
-            background-color: transparent; /* Transparent background */
+            background-color: transparent;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
+            overflow: hidden;
         }
 
         .card-container {
             position: relative;
-            width: 350px;
-            height: 200px;
-            perspective: 1000px;
+            width: 100vw;
+            height: 100vh;
+            perspective: 1500px; /* For 3D flip effect */
         }
 
         .card {
@@ -31,7 +32,7 @@
         }
 
         .card.flipped {
-            transform: rotateY(180deg);
+            transform: rotateY(180deg); /* Flip the card */
         }
 
         .card-face {
@@ -40,29 +41,23 @@
             height: 100%;
             backface-visibility: hidden;
             display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             padding: 20px;
+            box-sizing: border-box; /* Include padding in dimensions */
+            border-radius: 10px;
         }
 
         .card-front {
-            background-color: #fff;
-            display: flex;
+            background-color: #ffffff;
             flex-direction: row;
             justify-content: space-between;
             align-items: center;
         }
 
         .card-back {
-            background-color: #f4f4f4;
+            background-color: #fbfbfb;
             transform: rotateY(180deg);
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
+            flex-direction: row; /* Changed to row */
+            justify-content: space-between; /* Spaced between content */
             align-items: center;
         }
 
@@ -70,7 +65,7 @@
             font-size: 16px;
             font-weight: bold;
             color: #333;
-            margin-right: auto;
+            text-align: center;
         }
 
         .info-icon {
@@ -79,9 +74,10 @@
         }
 
         .content {
-            font-size: 14px; /* Slightly larger font for readability */
-            text-align: center;
+            font-size: 14px;
+            text-align: left; /* Left-aligned content */
             color: #333;
+            flex: 1; /* Take up available space */
         }
     </style>
 </head>
@@ -103,7 +99,7 @@
     </div>
 
     <script>
-        // Function to get query parameter value (handles unencoded values)
+        // Function to get query parameter value
         function getQueryParameter(param) {
             const urlParams = new URLSearchParams(window.location.search);
             const value = urlParams.get(param);
