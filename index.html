@@ -103,11 +103,23 @@
     </div>
 
     <script>
+        // Function to convert object to Map
+        function convertToMap(obj) {
+            if (obj && typeof obj === 'object' && !Array.isArray(obj)) {
+                const map = new Map();
+                Object.entries(obj).forEach(([key, value]) => {
+                    map.set(key, convertToMap(value)); // Recursively convert nested objects
+                });
+                return map;
+            }
+            return obj; // Return primitive values as-is
+        }
+
         // Function to get query parameter value
         function getQueryParameter(param) {
             const urlParams = new URLSearchParams(window.location.search);
             const value = urlParams.get(param);
-        
+
             // Remove any extra quotes if they exist
             if (value && value.startsWith('"') && value.endsWith('"')) {
                 return value.slice(1, -1);
@@ -115,25 +127,29 @@
             return value;
         }
 
-        // Set dynamic title and content
-        const title = getQueryParameter('title') || 'Default Title';
-        const contents = getQueryParameter('contents');
-        let itemsArray = [];
-        let content = 'No content provided';
+        // Fetch and parse the 'params' query parameter
+        const params = getQueryParameter('params') || '{}';
+        let parsedParams = {};
 
-        if (contents) {
-            itemsArray = contents.split(",,");
-            content = itemsArray[0]; // Default to the first content
-        
-            if (title.includes('-')) {
-                const ttype = title.split(' - ')[1];
-                for (const item of itemsArray) {
-                    const itemArray = item.split(' - ');
-                    if (itemArray[1] === ttype) {
-                        content = itemArray[0];
-                        break;
-                    }
-                }
+        try {
+            parsedParams = JSON.parse(params);
+        } catch (error) {
+            console.error("Error parsing params:", error);
+            alert("Invalid parameters in URL.");
+        }
+
+        // Convert parsedParams to a Map
+        const map = convertToMap(parsedParams);
+
+        // Extract values from the map with fallback
+        let title = map.get("title") || 'Default Title';
+        let content = map.get("content") || 'No content provided';
+        let type = map.get("type");
+
+        if (type) {
+            const contents = map.get("contents");
+            if (contents instanceof Map) {
+                content = contents.get(type) || content;
             }
         }
 
